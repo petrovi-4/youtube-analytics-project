@@ -2,7 +2,12 @@ from src.channel import Channel
 
 if __name__ == '__main__':
     moscowpython = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
+    vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+    igm = Channel('UC1CchA0SjApw4T-AYkN7ytg')
+
     moscowpython.print_info()
+    vdud.print_info()
+    igm.print_info()
 
     """
 {
