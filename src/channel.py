@@ -4,18 +4,17 @@ import json
 
 from googleapiclient.discovery import build
 
-API_KEY = os.getenv('YT_API_KEY')
-
 
 class Channel:
     """Класс для ютуб-канала"""
+    API_KEY = os.getenv('YT_API_KEY')
 
     def __init__(self, channel_id: str) -> None:
         """
         Экземпляр инициализируется id канала.
         Дальше все данные будут подтягиваться по API.
         """
-        self.channel_id = channel_id
+        self.__channel_id = channel_id
         self.title = None
         self.description = None
         self.url = None
@@ -24,9 +23,18 @@ class Channel:
         self.view_count = None
         self._fetch_channel_data()
 
+    @property
+    def channel_id(self) -> str:
+        return self.__channel_id
+
+    @channel_id.setter
+    def channel_id(self, channel_id: str) -> None:
+        raise AttributeError(
+            f'property "channel_id" of "Channel" object has no setter')
+
     def _fetch_channel_data(self) -> None:
         """Метод для получения данных о канале по API."""
-        youtube = build('youtube', 'v3', developerKey=API_KEY)
+        youtube = build('youtube', 'v3', developerKey=self.API_KEY)
         request = youtube.channels().list(
             part='snippet,statistics', id=self.channel_id
         )
@@ -48,7 +56,7 @@ class Channel:
     @classmethod
     def get_service(cls):
         """Класс-метод для получения объекта для работы с YouTube API."""
-        return build('youtube', 'v3', developerKey=API_KEY)
+        return build('youtube', 'v3', developerKey=cls.API_KEY)
 
     def to_json(self, filename: str) -> None:
         """Метод для сохранения значений атрибутов в JSON-файл."""
