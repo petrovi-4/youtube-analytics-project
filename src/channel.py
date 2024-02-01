@@ -23,6 +23,62 @@ class Channel:
         self.view_count = None
         self._fetch_channel_data()
 
+    def __repr__(self) -> str:
+        return (f"{self.__class__.__name__}('{self.__channel_id}', "
+                f"'{self.title}', {self.subscriber_count}, {self.video_count}, "
+                f"{self.view_count})")
+
+    def __str__(self) -> str:
+        return f'{self.title} ({self.url}'
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Channel):
+            return self.subscriber_count == other.subscriber_count
+        return NotImplemented
+
+    def __ne__(self, other: object) -> bool:
+        if isinstance(other, Channel):
+            return self.subscriber_count != other.subscriber_count
+        return NotImplemented
+
+    def __lt__(self, other: object) -> bool:
+        if isinstance(other, Channel):
+            return self.subscriber_count < other.subscriber_count
+        return NotImplemented
+
+    def __le__(self, other: object) -> bool:
+        if isinstance(other, Channel):
+            return self.subscriber_count <= other.subscriber_count
+        return NotImplemented
+
+    def __gt__(self, other: object) -> bool:
+        if isinstance(other, Channel):
+            return self.subscriber_count > other.subscriber_count
+        return NotImplemented
+
+    def __ge__(self, other: object) -> bool:
+        if isinstance(other, Channel):
+            return self.subscriber_count >= other.subscriber_count
+        return NotImplemented
+
+    def __add__(self, other):
+        if isinstance(other, Channel):
+            result = Channel(self.channel_id)
+            result.subscriber_count = (
+		            (self.subscriber_count or 0) + (other.subscriber_count or 0)
+            )
+            return result.subscriber_count
+        return NotImplemented
+
+    def __sub__(self, other):
+        if isinstance(other, Channel):
+            result = Channel(self.channel_id)
+            result.subscriber_count -= (
+	            (self.subscriber_count or 0) - (other.subscriber_count or 0)
+            )
+            return result.subscriber_count
+        return NotImplemented
+
     @property
     def channel_id(self) -> str:
         return self.__channel_id
@@ -61,13 +117,13 @@ class Channel:
     def to_json(self, filename: str) -> None:
         """Метод для сохранения значений атрибутов в JSON-файл."""
         data = {
-             'channel_id': self.channel_id,
-             'title': self.title,
-             'description': self.description,
-             'url': self.url,
-             'subscriber_count': self.subscriber_count,
-             'video_count': self.video_count,
-             'view_count': self.view_count
+            'channel_id': self.channel_id,
+            'title': self.title,
+            'description': self.description,
+            'url': self.url,
+            'subscriber_count': self.subscriber_count,
+            'video_count': self.video_count,
+            'view_count': self.view_count
         }
 
         with open(filename, 'w', encoding='utf-8') as json_file:
@@ -85,5 +141,13 @@ class Channel:
 
 
 if __name__ == '__main__':
-    channel = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
-    pprint(channel.print_info())
+    channel1 = Channel('UC-OVMPlMA3-YCIeg4z5z23A')
+    channel2 = Channel('UC1CchA0SjApw4T-AYkN7ytg')
+    pprint(repr(channel1))
+    pprint(repr(channel2))
+    pprint(str(channel1))
+    pprint(str(channel2))
+    pprint(channel1 == channel2)
+    pprint(channel1 < channel2)
+    pprint(channel1 + channel2)
+    pprint(channel1 - channel2)
